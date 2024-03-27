@@ -1,0 +1,49 @@
+CREATE DATABASE IF NOT EXISTS test_rbh
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
+
+USE test_rbh
+
+-- Create table for cards
+CREATE TABLE IF NOT EXISTS cards (
+  `id` CHAR(36) NOT NULL PRIMARY KEY,
+  `header` VARCHAR(255) NOT NULL,
+  `detail` TEXT NOT NULL,
+  `status` ENUM('TODO', 'IN_PROGRESS', 'DONE') NOT NULL DEFAULT 'TODO',
+  `createEmail` VARCHAR(255) NOT NULL,
+  `createName` VARCHAR(255) NOT NULL,
+  `createDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userId` VARCHAR(255) NOT NULL,
+  INDEX `idx_userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create table for comments
+CREATE TABLE IF NOT EXISTS comments (
+  `id` CHAR(36) NOT NULL PRIMARY KEY,
+  `content` TEXT NOT NULL,
+  `createName` VARCHAR(255) NOT NULL,
+  `createDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `isDeleted` BOOLEAN NOT NULL DEFAULT FALSE,
+  `cardId` VARCHAR(255) NOT NULL,
+  `userId` VARCHAR(255) NOT NULL,
+  INDEX `idx_cardId` (`cardId`),
+  INDEX `idx_userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user (
+  `id` CHAR(36) NOT NULL PRIMARY KEY,
+  `username` VARCHAR(30) NOT NULL UNIQUE,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `createDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS cards_log (
+  `id` CHAR(36) NOT NULL PRIMARY KEY,
+  `cardId` VARCHAR(255) NOT NULL,
+  `header` VARCHAR(255) NOT NULL,
+  `detail` TEXT NOT NULL,
+  `status` VARCHAR(255) NOT NULL,
+  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
